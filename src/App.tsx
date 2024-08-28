@@ -70,7 +70,6 @@ function App() {
   const handleClickPoint = (id: number) => {
     if (id !== currentCount) {
       setStatus({ title: "GAME OVER", color: "text-red-500" });
-      clearValues();
       return;
     }
 
@@ -85,7 +84,6 @@ function App() {
       setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
       if (buttons.length === 1) {
         setStatus({ title: "ALL CLEARED", color: "text-green-500" });
-        clearValues();
       }
     }, 500);
   };
