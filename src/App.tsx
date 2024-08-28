@@ -118,7 +118,7 @@ function App() {
         <h3>Time:</h3>
         <p>{formatTime(time)}s</p>
       </div>
-      <button className="border w-1/4" onClick={playGame}>
+      <button className="border w-1/6" onClick={playGame}>
         {!isPlay ? "Play" : "Reset"}
       </button>
       <div className="relative w-full border border-black h-[70vh]">
