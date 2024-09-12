@@ -146,7 +146,7 @@ function App() {
 
       {showCursor && (
         <div
-          className="bg-white w-12 h-12 rounded-full absolute border border-black -translate-x-1/2 -translate-y-1/2  z-[9999] bg-transparent"
+          className=" w-12 h-12 rounded-full absolute border border-black -translate-x-1/2 -translate-y-1/2  z-[9999] bg-transparent"
           style={{ left: cursor.x, top: cursor.y }}
         />
       )}
