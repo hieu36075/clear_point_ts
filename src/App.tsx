@@ -123,7 +123,7 @@ function App() {
         <h3>Time:</h3>
         <p>{formatTime(time)}s</p>
       </div>
-      <button className="border w-40 bg-gray-100 border-black rounded-sm hover:bg-gray-200 " onClick={playGame}>
+      <button className="border w-40 bg-gray-100 border-black rounded-sm hover:bg-gray-200 z-1 " onClick={playGame}>
         {!isPlay ? "Play" : "Reset"}
       </button>
       <div className="relative w-full border border-black h-[70vh] z-50">
@@ -146,7 +146,7 @@ function App() {
 
       {showCursor && (
         <div
-          className="bg-white w-12 h-12 rounded-full absolute border border-black -translate-x-1/2 -translate-y-1/2  -z-10"
+          className="bg-white w-12 h-12 rounded-full absolute border border-black -translate-x-1/2 -translate-y-1/2  z-[9999] bg-transparent"
           style={{ left: cursor.x, top: cursor.y }}
         />
       )}
