@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface ButtonProps {
   id: number;
@@ -40,14 +40,15 @@ function App() {
     return () => window.removeEventListener("click", handleClick);
   }, []);
 
-  const playGame = () => {
+
+  const playGame = useCallback(() => {
     if (count <= 0) return;
     clearValues();
     setStatus({ title: "Let's Play", color: "text-black" });
     setIsPlay(true);
     generateButtons(count);
     startTime();
-  };
+  }, [count]);
 
   const generateButtons = (numButtons: number) => {
     const newButtons = Array.from({ length: numButtons }, (_, i) => ({
@@ -67,28 +68,32 @@ function App() {
     intervalRef.current = setInterval(() => setTime((timer) => timer + 10), 10);
   };
 
-  const handleClickPoint = (id: number) => {
-    if (id !== currentCount) {
-      setStatus({ title: "GAME OVER", color: "text-red-500" });
-      clearValues();
-      return;
-    }
-
-    setCurrentCount(currentCount + 1);
-    setButtons((prevButtons) =>
-      prevButtons.map((button) =>
-        button.id === id ? { ...button, removing: true } : button
-      )
-    );
-
-    setTimeout(() => {
-      setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
-      if (buttons.length === 1) {
-        setStatus({ title: "ALL CLEARED", color: "text-green-500" });
+  
+  const handleClickPoint = useCallback(
+    (id: number) => {
+      if (id !== currentCount) {
+        setStatus({ title: "GAME OVER", color: "text-red-500" });
         clearValues();
+        return;
       }
-    }, 500);
-  };
+
+      setCurrentCount(currentCount + 1);
+      setButtons((prevButtons) =>
+        prevButtons.map((button) =>
+          button.id === id ? { ...button, removing: true } : button
+        )
+      );
+
+      setTimeout(() => {
+        setButtons((prevButtons) => prevButtons.filter((button) => button.id !== id));
+        if (buttons.length === 1) {
+          setStatus({ title: "ALL CLEARED", color: "text-green-500" });
+          clearValues();
+        }
+      }, 500);
+    },
+    [currentCount, buttons] 
+  );
 
   const clearValues = () => {
     if (intervalRef.current) {
@@ -118,21 +123,27 @@ function App() {
         <h3>Time:</h3>
         <p>{formatTime(time)}s</p>
       </div>
-      <button className="border w-1/6" onClick={playGame}>
+      <button className="border w-40 bg-gray-100 border-black rounded-sm hover:bg-gray-200 " onClick={playGame}>
         {!isPlay ? "Play" : "Reset"}
       </button>
-      <div className="relative w-full border border-black h-[70vh]">
+      <div className="relative w-full border border-black h-[70vh] z-50">
         {buttons.map((button) => (
           <button
             key={button.id}
-            className={`border w-10 h-10 rounded-full absolute transition-all duration-500 ease-in-out ${button.removing ? "focus:bg-red-400 focus:duration-1000" : ""}`}
-            style={{ left: button.left, top: button.top }}
+            className={`absolute border border-black w-10 h-10 rounded-full bg-white transition-all duration-500 ease-in-out text-lg font-bold ${button.removing ? "focus:bg-red-400 focus:duration-1000" : ""
+              }`}
+            style={{
+              left: button.left,
+              top: button.top,
+              zIndex: count - button.id,
+            }}
             onClick={() => handleClickPoint(button.id)}
           >
             {button.id + 1}
           </button>
         ))}
       </div>
+
       {showCursor && (
         <div
           className="bg-white w-12 h-12 rounded-full absolute border border-black -translate-x-1/2 -translate-y-1/2  -z-10"
